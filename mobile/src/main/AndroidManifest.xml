@@ -14,8 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.HomeActivity"
-            android:launchMode="singleInstance">
+            android:name=".ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,14 +22,19 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.MusicService"
-            android:stopWithTask="false"></service>
+        <service
+            android:name=".services.MusicService"
+            android:stopWithTask="false" />
 
         <receiver android:name=".receivers.NoisyReceiver">
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activities.BaseActivity" />
+        <activity android:name=".activities.SongsListActivity"
+            android:parentActivityName=".ui.HomeActivity"></activity>
     </application>
 
 </manifest>

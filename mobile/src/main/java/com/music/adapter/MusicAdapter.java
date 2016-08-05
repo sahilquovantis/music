@@ -20,6 +20,7 @@ import com.music.interfaces.IMusicListClickListener;
 import com.music.utility.MusicHelper;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,13 +32,14 @@ import io.realm.RealmResults;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> {
     private Context mContext;
     private IMusicListClickListener iMusicListClickListener;
-    private RealmResults<SongDetailsModel> mSongList;
-    public final static String INTENT_FILTER = "com.music.on.click";
+    private ArrayList<SongDetailsModel> mSongList;
 
-    public MusicAdapter(Context context, RealmResults<SongDetailsModel> mSongList, IMusicListClickListener clickListener) {
+    public MusicAdapter(Context context, ArrayList<SongDetailsModel> mSongList, IMusicListClickListener clickListener) {
         mContext = context;
         iMusicListClickListener = clickListener;
-        MusicHelper.getInstance().setSongsPlayList(mSongList);
+        if (mSongList != null) {
+            MusicHelper.getInstance().setSongsPlayList(mSongList);
+        }
         this.mSongList = mSongList;
     }
 
@@ -53,7 +55,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         holder.mSongTV.setText(mSongList.get(pos).getSongTitle());
         holder.mSongArtistTV.setText(mSongList.get(pos).getSongArtist());
         loadBitmap(holder.mSongThumbnailIV, mSongList.get(pos).getSongThumbnailData());
-        Log.d("Training","Path : " + mSongList.get(pos).getSongPath());
+       // Log.d("Training", "Path : " + mSongList.get(pos).getSongPath());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +66,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return mSongList.size();
+        if(mSongList != null && !mSongList.isEmpty()) {
+            return mSongList.size();
+        }else {
+            return 0;
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

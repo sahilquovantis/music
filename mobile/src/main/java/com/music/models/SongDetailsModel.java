@@ -12,9 +12,17 @@ public class SongDetailsModel extends RealmObject {
     private String mSongID;
     private String mSongTitle;
     private String mSongArtist;
-    private String mSongPath;
+    private int mSongPathID;
     private byte[] mSongThumbnailData;
     private long mSongDuration;
+
+    public int getSongPathID() {
+        return mSongPathID;
+    }
+
+    public void setSongPathID(int mSongPathID) {
+        this.mSongPathID = mSongPathID;
+    }
 
     public String getSongID() {
         return mSongID;
@@ -38,14 +46,6 @@ public class SongDetailsModel extends RealmObject {
 
     public void setSongArtist(String mSongArtist) {
         this.mSongArtist = mSongArtist;
-    }
-
-    public String getSongPath() {
-        return mSongPath;
-    }
-
-    public void setSongPath(String mSongPath) {
-        this.mSongPath = mSongPath;
     }
 
     public byte[] getSongThumbnailData() {

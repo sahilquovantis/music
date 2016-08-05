@@ -51,6 +51,7 @@ public class NotificationHelper {
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 1, intent, 0);
 
             Intent showActivityIntent = new Intent(mContext, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.setAction(Utils.INTENT_ACTION_SHOW_ACTIVITY);
             PendingIntent showActivityPendingIntent = PendingIntent.getActivity(mContext, 1, showActivityIntent, 0);
 

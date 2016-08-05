@@ -17,5 +17,6 @@ public class Utils {
     public static final String INTENT_ACTION_PREVIOUS = "com.music.action.previous";
     public static final String SHARED_PREFERENCE_FILE_NAME = "com.music.shared.preferences.file.name";
     public static final String SHARED_PREFERENCE_FIRST_TIME_OPEN = "FIRST_TIME_OPEN";
+    public static final String INTENT_ACTION_PATH_ID_SONG_ACTIVITY = "com.music.path.id";
     public static SharedPreferences sSharedPreferences;
 }
