@@ -124,6 +124,7 @@ public class RefreshMusicAsyncTask extends AsyncTask<Void, Integer, Void> {
                                 SongPathModel songPathModel = realm.createObject(SongPathModel.class);
                                 songPathModel.setSongDirectory(directory);
                                 songPathModel.setSongPath(path);
+                                songPathModel.setCompletePath(songPath);
                                 id[0] = getKey();
                                 songPathModel.setId(id[0]);
                             }

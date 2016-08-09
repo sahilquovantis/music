@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary" />
+        android:background="#212121" />
 
     <include
         android:id="@+id/rl_music_layout"
@@ -22,7 +22,7 @@
         android:id="@+id/rv_display_songs_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/black"
         android:layout_above="@id/rl_music_layout"
         android:layout_below="@id/toolbar"
         android:scrollbars="vertical" />

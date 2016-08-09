@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:layout_margin="@dimen/padding">
+    android:layout_height="150dp"
+    android:layout_margin="2dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_folder_name"
+    <ImageView
+        android:id="@+id/iv_song_thumbnail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/padding"
-        android:text="Downloads"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_18" />
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/music" />
 
-    <TextView
-        android:id="@+id/tv_folder_path"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding"
-        android:paddingLeft="@dimen/padding"
-        android:paddingRight="@dimen/padding"
-        android:text="sd" />
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_folder_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/padding"
+            android:paddingRight="@dimen/padding"
+            android:paddingTop="@dimen/padding"
+            android:text="Dummy Song"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_folder_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:text="Dummy Artist"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+</RelativeLayout>

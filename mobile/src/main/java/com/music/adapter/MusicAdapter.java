@@ -38,7 +38,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
         mContext = context;
         iMusicListClickListener = clickListener;
         if (mSongList != null) {
-            MusicHelper.getInstance().setSongsPlayList(mSongList);
+           // MusicHelper.getInstance().setSongsPlayList(mSongList);
         }
         this.mSongList = mSongList;
     }
@@ -52,13 +52,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int pos = position;
-        holder.mSongTV.setText(mSongList.get(pos).getSongTitle());
-        holder.mSongArtistTV.setText(mSongList.get(pos).getSongArtist());
-        loadBitmap(holder.mSongThumbnailIV, mSongList.get(pos).getSongThumbnailData());
-       // Log.d("Training", "Path : " + mSongList.get(pos).getSongPath());
+        final SongDetailsModel songDetailsModel = mSongList.get(pos);
+        holder.mSongTV.setText(songDetailsModel.getSongTitle());
+        holder.mSongArtistTV.setText(songDetailsModel.getSongArtist());
+        loadBitmap(holder.mSongThumbnailIV, songDetailsModel.getSongThumbnailData());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MusicHelper.getInstance().addSongToPlaylist(songDetailsModel);
                 iMusicListClickListener.onClick(mSongList.get(pos).getSongID());
             }
         });

@@ -11,7 +11,16 @@ public class SongPathModel extends RealmObject {
     @PrimaryKey
     private int mId;
     private String mSongDirectory;
+    private String mCompletePath;
     private String mSongPath;
+
+    public String getCompletePath() {
+        return mCompletePath;
+    }
+
+    public void setCompletePath(String mCompletePath) {
+        this.mCompletePath = mCompletePath;
+    }
 
     public int getId() {
         return mId;

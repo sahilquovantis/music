@@ -1,9 +1,13 @@
-package com.music.ui;
+package com.music.activities;
 
 import android.content.Intent;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.Process;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.music.R;
-import com.music.activities.BaseActivity;
 import com.music.adapter.FoldersAdapter;
 import com.music.asynctasks.RefreshMusicAsyncTask;
+import com.music.interfaces.IFolderClickListener;
 import com.music.interfaces.IMusicListListener;
+import com.music.models.SongDetailsModel;
 import com.music.models.SongPathModel;
 import com.music.services.MusicService;
+import com.music.utility.MusicHelper;
 import com.music.utility.Utils;
 
 import java.util.ArrayList;
@@ -28,10 +34,8 @@ import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class HomeActivity extends BaseActivity implements IMusicListListener {
+public class FoldersListActivity extends BaseActivity implements IMusicListListener, IFolderClickListener {
 
-    @BindView(R.id.rl_home_layout)
-    RelativeLayout mHomeLayoutRL;
     @BindView(R.id.rv_contains_songs)
     RecyclerView mContainsSongsRV;
     @BindView(R.id.iv_refresh_playlist)
@@ -50,11 +54,17 @@ public class HomeActivity extends BaseActivity implements IMusicListListener {
         mRealm = Realm.getDefaultInstance();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Music");
+        getSupportActionBar().setTitle("");
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mActionBarToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close);
+        mDrawerLayout.addDrawerListener(mActionBarToggle);
+        mActionBarToggle.syncState();
 
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new GridLayoutManager(this, 2);
         mContainsSongsRV.setLayoutManager(mLayoutManager);
-        mAdapter = new FoldersAdapter(HomeActivity.this, mFoldersList);
+        mAdapter = new FoldersAdapter(FoldersListActivity.this, mFoldersList, this);
         mContainsSongsRV.setAdapter(mAdapter);
         Utils.sSharedPreferences = getSharedPreferences(Utils.SHARED_PREFERENCE_FILE_NAME, MODE_PRIVATE);
         boolean isFirstTime = Utils.sSharedPreferences.getBoolean(Utils.SHARED_PREFERENCE_FIRST_TIME_OPEN, true);
@@ -72,6 +82,9 @@ public class HomeActivity extends BaseActivity implements IMusicListListener {
     @OnClick(R.id.iv_refresh_playlist)
     public void refreshPlayList() {
         Log.d("Training", "Refreshing Playlist");
+        if (mediaController != null) {
+            mediaController.getTransportControls().sendCustomAction("NONE", null);
+        }
         new RefreshMusicAsyncTask(this, this).execute();
     }
 
@@ -103,10 +116,20 @@ public class HomeActivity extends BaseActivity implements IMusicListListener {
             if (mediaController.getPlaybackState() == null ||
                     mediaController.getPlaybackState().getState() == PlaybackState.STATE_NONE) {
                 Log.d("Training", "Stopping Service from main activity");
-                stopService(new Intent(HomeActivity.this, MusicService.class));
+                stopService(new Intent(FoldersListActivity.this, MusicService.class));
                 Process.killProcess(Process.myPid());
             }
         }
     }
 
+    @Override
+    public void onLongClick(int i, long folderID) {
+        Log.d("Training", "OnLong Click : Folders");
+        RealmResults<SongDetailsModel> list = mRealm.where(SongDetailsModel.class).equalTo("mSongPathID", folderID).findAll();
+        if (i == FoldersAdapter.FOLDER_PLAY) {
+
+        } else if (i == FoldersAdapter.FOLDER_ADD_TO_QUEUE) {
+            MusicHelper.getInstance().addSongToPlaylist(list);
+        }
+    }
 }

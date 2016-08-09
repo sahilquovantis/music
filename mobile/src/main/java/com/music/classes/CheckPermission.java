@@ -24,7 +24,7 @@ public class CheckPermission {
 
 
     public void checkPermission() {
-        if (CheckPermission.isPermissionGranted(HomeActivity.this,
+        if (CheckPermission.isPermissionGranted(FoldersListActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
             mIsPermissionGranted = true;
             updateSonListUI();

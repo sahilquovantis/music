@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.music.R;
 import com.music.adapter.MusicAdapter;
@@ -38,8 +39,7 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Songs");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        getSupportActionBar().setHomeButtonEnabled(true);
         mLayoutManager = new LinearLayoutManager(this);
         mDisplayListRV.setLayoutManager(mLayoutManager);
         mAdapter = new MusicAdapter(this, mSongList, this);
@@ -47,7 +47,7 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
         Intent intent = getIntent();
         if (intent != null && intent.getAction().equals(Utils.INTENT_ACTION_PATH_ID_SONG_ACTIVITY)) {
             long id = intent.getLongExtra("id", -1);
-            String title= intent.getStringExtra("title");
+            String title = intent.getStringExtra("title");
             getSupportActionBar().setTitle(title);
             showList(id);
         }
@@ -62,6 +62,15 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Interface : Called when the Song is Clicked From the List {@link MusicAdapter}
      *
@@ -73,5 +82,11 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
         if (mediaController != null) {
             mediaController.getTransportControls().playFromMediaId(id, null);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(this);
     }
 }

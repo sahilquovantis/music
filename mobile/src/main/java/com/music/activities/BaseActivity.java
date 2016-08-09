@@ -13,9 +13,15 @@ import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Process;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -28,7 +34,7 @@ import com.music.utility.Utils;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class BaseActivity extends AppCompatActivity implements ServiceConnection {
+public class BaseActivity extends AppCompatActivity implements ServiceConnection, NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.iv_selected_song_thumbnail)
     ImageView mSelectedSongThumbnailIV;
@@ -47,6 +53,9 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public MediaMetadata mCurrentMetadata;
     public PlaybackState mCurrentState;
     public MediaController mediaController;
+    public DrawerLayout mDrawerLayout;
+    public NavigationView mNavigationView;
+    public ActionBarDrawerToggle mActionBarToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +92,27 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
     public void updateState(PlaybackState state) {
         mCurrentState = state;
         Log.d("Training", "Activity Current Playback State : " + state);
-        mMusicLayoutRL.setVisibility(View.VISIBLE);
+        mMusicLayoutRL.setVisibility(View.GONE);
         if (state == null || state.getState() == PlaybackState.STATE_NONE || mCurrentMetadata == null) {
             mMusicLayoutRL.setVisibility(View.GONE);
+            return;
         } else if (state.getState() == PlaybackState.STATE_PAUSED || state.getState() == PlaybackState.STATE_STOPPED) {
             mPlayPaueIV.setImageResource(R.drawable.ic_action_play);
+            mMusicLayoutRL.setVisibility(View.VISIBLE);
         } else if (state.getState() == PlaybackState.STATE_PLAYING) {
             mPlayPaueIV.setImageResource(R.drawable.ic_action_pause);
+            mMusicLayoutRL.setVisibility(View.VISIBLE);
+        }
+        long currentPosition = state.getPosition();
+        if (state.getState() != PlaybackState.STATE_PAUSED) {
+            // Calculate the elapsed time between the last position update and now and unless
+            // paused, we can assume (delta * speed) + current position is approximately the
+            // latest position. This ensure that we do not repeatedly call the getPlaybackState()
+            // on MediaController.
+            long timeDelta = SystemClock.elapsedRealtime() -
+                    state.getLastPositionUpdateTime();
+            currentPosition += (int) timeDelta * state.getPlaybackSpeed();
+            Log.d("Training", "POS : " + currentPosition);
         }
     }
 
@@ -105,7 +128,6 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
                 mediaController.getTransportControls().pause();
             } else if (mCurrentState.getState() == PlaybackState.STATE_PAUSED ||
                     mCurrentState.getState() == PlaybackState.STATE_STOPPED) {
-               // mediaController.getTransportControls().playFromMediaId(mCurrentMetadata.getDescription().getMediaId(), null);
                 mediaController.getTransportControls().play();
             }
         }
@@ -191,4 +213,8 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         unregisterReceiver(mCloseApplicationReceiver);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        return false;
+    }
 }

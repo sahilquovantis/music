@@ -7,11 +7,14 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.music.R;
 import com.music.models.SongDetailsModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import io.realm.Realm;
@@ -21,18 +24,37 @@ import io.realm.RealmResults;
  * Created by sahil-goel on 21/7/16.
  */
 public class MusicHelper {
-    private int mCurrentPosition = 0;
-    private Realm mRealm;
+    private int mCurrentPosition = -1;
     private static MusicHelper sInstance;
-    private List<SongDetailsModel> mSongsPlayList;
+    private ArrayList<SongDetailsModel> mCurrentPlaylist;
 
     private MusicHelper() {
-        mSongsPlayList = new ArrayList<>();
-        mRealm = Realm.getDefaultInstance();
+        mCurrentPlaylist = new ArrayList<>();
     }
 
-    public void setSongsPlayList(List<SongDetailsModel> mSongsPlayList) {
-        this.mSongsPlayList = mSongsPlayList;
+    public void addSongToPlaylist(SongDetailsModel songDetailsModel) {
+        try {
+            if (mCurrentPlaylist != null &&
+                    !mCurrentPlaylist.isEmpty() &&
+                    mCurrentPlaylist.contains(songDetailsModel)) {
+                mCurrentPosition = mCurrentPlaylist.indexOf(songDetailsModel);
+            } else {
+                mCurrentPosition += 1;
+                mCurrentPlaylist.add(mCurrentPosition, songDetailsModel);
+            }
+        } catch (NullPointerException e) {
+
+        }
+
+    }
+
+    public void addSongToPlaylist(RealmResults<SongDetailsModel> list) {
+        if (mCurrentPlaylist != null) {
+            int index = mCurrentPlaylist.isEmpty() ? 0 : mCurrentPlaylist.size();
+            if (!mCurrentPlaylist.isEmpty() && !mCurrentPlaylist.containsAll(list)) {
+                mCurrentPlaylist.addAll(index, list);
+            }
+        }
     }
 
     public static synchronized MusicHelper getInstance() {
@@ -51,15 +73,9 @@ public class MusicHelper {
      */
     public MediaMetadata getMetadata(Context context, String mediaId) {
         try {
-
-
-            RealmResults<SongDetailsModel> list = mRealm.where(SongDetailsModel.class)
-                    .equalTo("mSongID", mediaId)
-                    .findAll();
-            if (list.size() == 1) {
-                mCurrentPosition = mSongsPlayList.indexOf(list.get(0));
+            if (!mCurrentPlaylist.isEmpty()) {
                 Log.d("Training", "Current Position : " + mCurrentPosition);
-                SongDetailsModel songDetailsModel = list.get(0);
+                SongDetailsModel songDetailsModel = mCurrentPlaylist.get(mCurrentPosition);
                 MediaMetadata.Builder builder = new MediaMetadata.Builder();
                 builder.putString(MediaMetadata.METADATA_KEY_MEDIA_ID, songDetailsModel.getSongID());
                 builder.putString(MediaMetadata.METADATA_KEY_ARTIST, songDetailsModel.getSongArtist());
@@ -94,17 +110,16 @@ public class MusicHelper {
     public String getPreviousSong(String currentMediaId) {
         String prevMediaId = null;
         try {
-            if (mSongsPlayList != null && !mSongsPlayList.isEmpty()) {
-                if (currentMediaId == null || mCurrentPosition == 0) {
-                    return mSongsPlayList.get(0).getSongID();
+            if (mCurrentPlaylist != null && !mCurrentPlaylist.isEmpty()) {
+                if (mCurrentPosition == 0) {
+                    mCurrentPosition = mCurrentPlaylist.size() - 1;
+                } else {
+                    mCurrentPosition -= 1;
                 }
-                prevMediaId = mSongsPlayList.get(mCurrentPosition - 1).getSongID();
-                if (prevMediaId == null) {
-                    prevMediaId = mSongsPlayList.get(0).getSongID();
-                }
+                prevMediaId = mCurrentPlaylist.get(mCurrentPosition).getSongID();
             }
         } catch (IllegalArgumentException | IndexOutOfBoundsException | NullPointerException e) {
-
+            mCurrentPosition = -1;
         }
         return prevMediaId;
     }
@@ -118,17 +133,16 @@ public class MusicHelper {
     public String getNextSong(String currentMediaId) {
         String nextMediaId = null;
         try {
-            if (mSongsPlayList != null && !mSongsPlayList.isEmpty()) {
-                if (currentMediaId == null || mCurrentPosition == mSongsPlayList.size() - 1) {
-                    return mSongsPlayList.get(0).getSongID();
+            if (mCurrentPlaylist != null && !mCurrentPlaylist.isEmpty()) {
+                if (mCurrentPosition == mCurrentPlaylist.size() - 1) {
+                    mCurrentPosition = 0;
+                } else {
+                    mCurrentPosition += 1;
                 }
-                nextMediaId = mSongsPlayList.get(mCurrentPosition + 1).getSongID();
-                if (nextMediaId == null) {
-                    nextMediaId = mSongsPlayList.get(0).getSongID();
-                }
+                nextMediaId = mCurrentPlaylist.get(mCurrentPosition).getSongID();
             }
         } catch (IllegalArgumentException | IndexOutOfBoundsException | NullPointerException e) {
-
+            mCurrentPosition = -1;
         }
 
         return nextMediaId;

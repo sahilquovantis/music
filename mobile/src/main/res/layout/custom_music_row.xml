@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/padding"
-    android:background="@color/white"
+    android:background="@color/black"
     android:orientation="vertical">
 
     <ImageView
@@ -24,26 +24,27 @@
             android:id="@+id/tv_song_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/black"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="@dimen/padding"
             android:paddingRight="@dimen/padding"
             android:paddingTop="@dimen/padding"
             android:text="Dummy Song"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size" />
 
         <TextView
             android:id="@+id/tv_song_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/black"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="@dimen/padding"
             android:paddingRight="@dimen/padding"
-            android:text="Dummy Artist" />
+            android:text="Dummy Artist"
+            android:textColor="#90ffffff"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

@@ -12,7 +12,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.NotificationCompat;
 
 import com.music.services.MusicService;
-import com.music.ui.HomeActivity;
+import com.music.activities.FoldersListActivity;
 import com.music.R;
 
 /**
@@ -50,8 +50,7 @@ public class NotificationHelper {
             intent.setAction(Utils.INTENT_ACTION_STOP);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 1, intent, 0);
 
-            Intent showActivityIntent = new Intent(mContext, HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent showActivityIntent = new Intent(mContext, FoldersListActivity.class);
             intent.setAction(Utils.INTENT_ACTION_SHOW_ACTIVITY);
             PendingIntent showActivityPendingIntent = PendingIntent.getActivity(mContext, 1, showActivityIntent, 0);
 
@@ -65,7 +64,7 @@ public class NotificationHelper {
                     .setStyle(new NotificationCompat.MediaStyle()
                             .setShowActionsInCompactView(0, 1, 2)
                             .setMediaSession(MediaSessionCompat.Token.fromToken(token)))
-                    .setColor(0xff5722);
+                    .setColor(0x000000);
             builder.addAction(createAction(R.drawable.ic_action_previous, "Previous", Utils.INTENT_ACTION_PREVIOUS));
             builder.addAction(createAction(iconForPlayPause, playPause, action));
             builder.addAction(createAction(R.drawable.ic_action_next, "Next", Utils.INTENT_ACTION_NEXT));
