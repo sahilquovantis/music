@@ -24,6 +24,7 @@ import com.music.models.SongDetailsModel;
 import com.music.models.SongPathModel;
 import com.music.services.MusicService;
 import com.music.utility.MusicHelper;
+import com.music.utility.SnackBarHelper;
 import com.music.utility.Utils;
 
 import java.util.ArrayList;
@@ -129,7 +130,12 @@ public class FoldersListActivity extends BaseActivity implements IMusicListListe
         if (i == FoldersAdapter.FOLDER_PLAY) {
 
         } else if (i == FoldersAdapter.FOLDER_ADD_TO_QUEUE) {
-            MusicHelper.getInstance().addSongToPlaylist(list);
+            boolean isAdded = MusicHelper.getInstance().addSongToPlaylist(list);
+            if (isAdded) {
+                SnackBarHelper.showSnackbar(mDrawerLayout, "Songs Queued");
+            } else {
+                SnackBarHelper.showSnackbar(mDrawerLayout, "Something went wrong");
+            }
         }
     }
 }

@@ -5,11 +5,30 @@
     android:layout_height="match_parent"
     tools:context="com.music.activities.SongsListActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
+        android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#212121" />
+        android:background="#212121"
+        android:elevation="@dimen/padding">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+        <ImageView
+            android:id="@+id/iv_show_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/padding"
+            android:paddingBottom="@dimen/padding"
+            android:paddingLeft="@dimen/padding"
+            android:clickable="true"
+            android:src="@drawable/ic_queue_music_white" />
+    </RelativeLayout>
 
     <include
         android:id="@+id/rl_music_layout"
@@ -24,6 +43,6 @@
         android:layout_height="match_parent"
         android:background="@color/black"
         android:layout_above="@id/rl_music_layout"
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/toolbar_layout"
         android:scrollbars="vertical" />
 </RelativeLayout>

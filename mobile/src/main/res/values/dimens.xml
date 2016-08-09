@@ -5,8 +5,8 @@
     <dimen name="padding">10dp</dimen>
     <dimen name="text_size">16sp</dimen>
     <dimen name="song_list_image_height">150dp</dimen>
-    <dimen name="play_pause_size">50dp</dimen>
-    <dimen name="music_player_height">95dp</dimen>
+    <dimen name="play_pause_size">60dp</dimen>
+    <dimen name="music_player_height">100dp</dimen>
     <dimen name="sp_16">16sp</dimen>
     <dimen name="sp_18">18sp</dimen>
 </resources>

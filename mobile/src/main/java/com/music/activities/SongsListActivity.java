@@ -13,12 +13,14 @@ import com.music.R;
 import com.music.adapter.MusicAdapter;
 import com.music.interfaces.IMusicListClickListener;
 import com.music.models.SongDetailsModel;
+import com.music.utility.PopUpHelper;
 import com.music.utility.Utils;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -29,13 +31,14 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<SongDetailsModel> mSongList = new ArrayList<>();
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs_list);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Songs");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,6 +85,11 @@ public class SongsListActivity extends BaseActivity implements IMusicListClickLi
         if (mediaController != null) {
             mediaController.getTransportControls().playFromMediaId(id, null);
         }
+    }
+
+    @OnClick(R.id.iv_show_queue)
+    public void showQueueList() {
+        PopUpHelper.getInstance(this).createPopUp(toolbar, mDisplayListRV.getHeight());
     }
 
     @Override

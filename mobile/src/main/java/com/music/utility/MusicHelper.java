@@ -48,13 +48,22 @@ public class MusicHelper {
 
     }
 
-    public void addSongToPlaylist(RealmResults<SongDetailsModel> list) {
+    public boolean addSongToPlaylist(RealmResults<SongDetailsModel> list) {
+        boolean isAdded = false;
         if (mCurrentPlaylist != null) {
             int index = mCurrentPlaylist.isEmpty() ? 0 : mCurrentPlaylist.size();
-            if (!mCurrentPlaylist.isEmpty() && !mCurrentPlaylist.containsAll(list)) {
-                mCurrentPlaylist.addAll(index, list);
+            if (!mCurrentPlaylist.containsAll(list)) {
+                isAdded = mCurrentPlaylist.addAll(index, list);
+            } else {
+                isAdded = true;
             }
+
         }
+        return isAdded;
+    }
+
+    public ArrayList<SongDetailsModel> getCurrentPlaylist() {
+        return mCurrentPlaylist;
     }
 
     public static synchronized MusicHelper getInstance() {
