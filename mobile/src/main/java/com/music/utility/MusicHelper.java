@@ -7,17 +7,13 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadata;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.music.R;
 import com.music.models.SongDetailsModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -27,9 +23,11 @@ public class MusicHelper {
     private int mCurrentPosition = -1;
     private static MusicHelper sInstance;
     private ArrayList<SongDetailsModel> mCurrentPlaylist;
+    private LinkedHashSet<SongDetailsModel> mSongsSet;
 
     private MusicHelper() {
-        mCurrentPlaylist = new ArrayList<>();
+        mSongsSet = new LinkedHashSet<>();
+        mCurrentPlaylist = new ArrayList<>(mSongsSet);
     }
 
     public void addSongToPlaylist(SongDetailsModel songDetailsModel) {
@@ -43,22 +41,24 @@ public class MusicHelper {
                 mCurrentPlaylist.add(mCurrentPosition, songDetailsModel);
             }
         } catch (NullPointerException e) {
-
         }
-
     }
 
     public boolean addSongToPlaylist(RealmResults<SongDetailsModel> list) {
-        boolean isAdded = false;
-        if (mCurrentPlaylist != null) {
-            int index = mCurrentPlaylist.isEmpty() ? 0 : mCurrentPlaylist.size();
-            if (!mCurrentPlaylist.containsAll(list)) {
-                isAdded = mCurrentPlaylist.addAll(index, list);
-            } else {
-                isAdded = true;
-            }
+        boolean isAdded;
+        mSongsSet.addAll(list);
+        mCurrentPlaylist.clear();
+        isAdded = mCurrentPlaylist.addAll(mSongsSet);
+        return isAdded;
+    }
 
-        }
+    public boolean addSongToPlaylist(ArrayList<SongDetailsModel> list, int pos) {
+        mCurrentPosition = pos;
+        boolean isAdded;
+        mSongsSet.clear();
+        mSongsSet.addAll(list);
+        mCurrentPlaylist.clear();
+        isAdded = mCurrentPlaylist.addAll(mSongsSet);
         return isAdded;
     }
 
@@ -95,7 +95,6 @@ public class MusicHelper {
                 return builder.build();
             }
         } catch (IllegalArgumentException | IndexOutOfBoundsException | NullPointerException e) {
-
         }
         return null;
     }
@@ -153,7 +152,6 @@ public class MusicHelper {
         } catch (IllegalArgumentException | IndexOutOfBoundsException | NullPointerException e) {
             mCurrentPosition = -1;
         }
-
         return nextMediaId;
     }
 

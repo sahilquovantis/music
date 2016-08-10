@@ -30,10 +30,13 @@ public class PopUpHelper {
     private PopUpHelper(Context context) {
         mView = LayoutInflater.from(context).inflate(R.layout.custom_popup, null);
         mPopupWindow = new PopupWindow(context);
+        mPopupWindow.setContentView(mView);
+        mPopupWindow.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setOutsideTouchable(true);
         mLayoutManager = new LinearLayoutManager(context);
         mQueueListRV = (RecyclerView) mView.findViewById(R.id.queue_recycler_view);
         mQueueListRV.setLayoutManager(mLayoutManager);
-        mAdapter = new PopupAdapter(mQueueList, context);
+        mAdapter = new PopupAdapter(MusicHelper.getInstance().getCurrentPlaylist(), context);
         mQueueListRV.setAdapter(mAdapter);
     }
 
@@ -45,13 +48,10 @@ public class PopUpHelper {
     }
 
     public void createPopUp(View anchor, int height) {
-        mQueueList.clear();
-        mQueueList.addAll(MusicHelper.getInstance().getCurrentPlaylist());
-        mAdapter.notifyDataSetChanged();
-        mPopupWindow.setContentView(mView);
-        mPopupWindow.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(height);
-        mPopupWindow.setFocusable(true);
         mPopupWindow.showAsDropDown(anchor);
+      /*  mQueueList.clear();
+        mQueueList.addAll(MusicHelper.getInstance().getCurrentPlaylist());*/
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -1,4 +1,4 @@
-package com.music;
+package com.music.utility;
 
 import android.content.Context;
 import android.media.AudioManager;

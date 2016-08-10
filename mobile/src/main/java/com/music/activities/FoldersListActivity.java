@@ -34,6 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class FoldersListActivity extends BaseActivity implements IMusicListListener, IFolderClickListener {
 
@@ -94,7 +95,7 @@ public class FoldersListActivity extends BaseActivity implements IMusicListListe
      */
     private void updateSongListUI() {
         Log.d("Training", "Showing List");
-        RealmResults<SongPathModel> list = mRealm.where(SongPathModel.class).findAll();
+        RealmResults<SongPathModel> list = mRealm.where(SongPathModel.class).findAll().sort("mSongDirectory", Sort.ASCENDING);
         mFoldersList.clear();
         mFoldersList.addAll(list);
         mAdapter.notifyDataSetChanged();

@@ -7,5 +7,5 @@ import com.music.activities.FoldersListActivity;
  * Interface for handling onClick on the Music List {@link FoldersListActivity}
  */
 public interface IMusicListClickListener {
-    public void onClick(String id);
+    void onClick(String id);
 }

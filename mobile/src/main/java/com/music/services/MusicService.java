@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.music.PlaybackManager;
+import com.music.utility.PlaybackManager;
 import com.music.R;
 import com.music.utility.MusicHelper;
 import com.music.utility.NotificationHelper;
@@ -68,8 +68,13 @@ public class MusicService extends Service implements PlaybackManager.ICallback {
         @Override
         public void onPlay() {
             super.onPlay();
-            onPlayFromMediaId(mPlaybackManager.getMediaMetaData().getDescription().getMediaId(),
-                    null);
+            String mediaId = null;
+            try {
+                mediaId = mPlaybackManager.getMediaMetaData().getDescription().getMediaId();
+            } catch (NullPointerException e) {
+
+            }
+            onPlayFromMediaId(mediaId, null);
         }
 
         @Override
