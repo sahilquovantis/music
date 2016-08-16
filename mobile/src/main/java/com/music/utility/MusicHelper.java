@@ -19,7 +19,7 @@ import io.realm.RealmResults;
 /**
  * Created by sahil-goel on 21/7/16.
  */
-public class MusicHelper {
+public class MusicHelper{
     private int mCurrentPosition = -1;
     private static MusicHelper sInstance;
     private ArrayList<SongDetailsModel> mCurrentPlaylist;
@@ -171,4 +171,5 @@ public class MusicHelper {
         }
         return bitmap;
     }
+
 }
