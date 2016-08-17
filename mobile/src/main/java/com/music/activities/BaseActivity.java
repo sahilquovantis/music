@@ -176,7 +176,8 @@ public class BaseActivity extends AppCompatActivity implements ServiceConnection
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
-                Process.killProcess(Process.myPid());
+              //  Process.killProcess(Process.myPid());
+                System.exit(0);
             }
         }
     };

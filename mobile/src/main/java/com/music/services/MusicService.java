@@ -71,10 +71,10 @@ public class MusicService extends Service implements PlaybackManager.ICallback {
             String mediaId = null;
             try {
                 mediaId = mPlaybackManager.getMediaMetaData().getDescription().getMediaId();
+                onPlayFromMediaId(mediaId, null);
             } catch (NullPointerException e) {
-
+                mPlaybackManager.setMediaData(null);
             }
-            onPlayFromMediaId(mediaId, null);
         }
 
         @Override
@@ -108,15 +108,25 @@ public class MusicService extends Service implements PlaybackManager.ICallback {
         @Override
         public void onSkipToNext() {
             super.onSkipToNext();
-            String mediaID = MusicHelper.getInstance().getNextSong(mPlaybackManager.getCurrentMediaId());
-            onPlayFromMediaId(mediaID, null);
+            String mediaID = null;
+            try {
+                mediaID = MusicHelper.getInstance().getNextSong(mPlaybackManager.getCurrentMediaId());
+                onPlayFromMediaId(mediaID, null);
+            } catch (NullPointerException e) {
+                mPlaybackManager.setMediaData(null);
+            }
         }
 
         @Override
         public void onSkipToPrevious() {
             super.onSkipToPrevious();
-            String mediaID = MusicHelper.getInstance().getPreviousSong(mPlaybackManager.getCurrentMediaId());
-            onPlayFromMediaId(mediaID, null);
+            String mediaID = null;
+            try {
+                mediaID = MusicHelper.getInstance().getPreviousSong(mPlaybackManager.getCurrentMediaId());
+                onPlayFromMediaId(mediaID, null);
+            } catch (NullPointerException e) {
+                mPlaybackManager.setMediaData(null);
+            }
         }
 
         @Override
@@ -149,6 +159,7 @@ public class MusicService extends Service implements PlaybackManager.ICallback {
     @Override
     public void onPlaybackStateChanged(PlaybackState state) {
         mMediaSession.setPlaybackState(state);
+        mNotificationHelper.cancelNotification();
         if (state.getState() == PlaybackState.STATE_PLAYING) {
             mNotificationHelper.createNotification(
                     mPlaybackManager.getMediaMetaData(),
@@ -167,7 +178,6 @@ public class MusicService extends Service implements PlaybackManager.ICallback {
                 sendBroadcast(intent);
                 stopSelf();
             }
-            mNotificationHelper.cancelNotification();
         }
     }
 
